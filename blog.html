@@ -1,0 +1,14 @@
+---
+layout: default
+title: Blog
+---
+<h2 class="subtitle is-3">Latest Posts</h2>
+
+<div>
+	{% for post in site.posts %}
+	<article class="tile is-child pt-2 pb-1 pl-6">
+		<h3 class="subtitle is-4"><a href="{{ post.url}}">{{ post.title }}</a></h3>
+		{{ post.excerpt }}
+	</article>
+	{% endfor %}
+</div>

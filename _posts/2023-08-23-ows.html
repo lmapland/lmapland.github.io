@@ -1,58 +1,34 @@
 ---
+layout: post
+author: Leslie Apland
+title: Open World Slasher
 ---
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<title>Open World Slasher</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <script
-      src="https://code.jquery.com/jquery-3.7.0.min.js"
-      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
-      crossorigin="anonymous">
-	</script>
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400&display=swap" rel="stylesheet">
-	<style>
-	  body {
-	    font-family: 'Josefin Sans', sans-serif;
-      }
-	</style>
-</head>
-<body>
-
-<div>
-<section class="hero is-info">
-  <div class="hero-body">
-    <p class="title">Leslie Apland | <a href="index.html">Home</a></p>
-  </div>
-</section>
-</div>
-
-<div class="tile">
-  <div class="tile is-parent is-vertical">
-	<article class="tile is-child pt-4 pl-2">
-	  <p class="title">Open World Slasher</p>
-	</article>
-	
-	<article class="tile is-child pt-2 pb-1 pl-6">
+<article>
 	  <p>In January of 2023 I used a UE5 game dev course as a base to build a variety of systems into a basic open world game where the user, armed with a sword, killed mobs, collected materials, could sell and purchase things from a merchant, could loot POIs, and was led through a simple tutorial to kill the boss.</p>
-	</article>
-	<article class="tile is-child pt-1 pb-1 pl-6">
+</article>
+
+<br>
+<div align="center">
+    <img src="/assets/images/ows-cover.png" />
+</div>
+<br>
+<article>
 	  <p>In particular I built out an item system using a DataTable which held information about all items, like their icons and Blueprints, price the user would get for selling, price the user would pay for purchasing, whether they were usable or not and what type of use they were (Equip vs "Direct" and if they were Direct use items, which other item did they gain and how many).</p>
-	</article>
-	<article class="tile is-child pt-1 pb-1 pl-6">
+</article>
+<br>
+<article>
 	  <p>As part of the item system I built out an interaction system where the user could pick up items on the ground, including showing information about the item when the user moused over it, and an inventory component where the user could interact with it. The user could move the item from one inventory slot to another, use the item, or drop the item. I created containers which the user could interact with, and when opened the user would see their inventory next to the container's inventory. The player could move items back and forth from their inventory to the container, either by using keyboard keys while clicking, or by clicking and dragging with the mouse.<p>
-	</article>
-	<article class="tile is-child pt-1 pb-2 pl-6">
+</article>
+<br>
+<article>
 	  <p>I also built a Merchant system where the user can sell items in their inventory to the Merchant for Gold and purchase items from the Merchant with that Gold.</p>
-	</article>
-	<article class="tile is-child pt-1 pb-2 pl-6">
+</article>
+<br>
+<article>
 	  <p>My favorite part was building the AI Alerting system. Most of the AI system was from the course I took, but I felt that the change from the AI being aggro'd on the player to the AI going back to their patrolling was too fast, and I instead added a new "Alerting" state where the AI would go from Aggro'd to Alerting to Patrolling instead, after a few seconds. And when the AI heard the player they enter the Alerting state until they actually see the player. To accomplish that I added the AI Perception Component's Hearing Sense and added Anim Notifies to the player's footsteps - when the player is running they make noise, and when they land after jumping or falling they also make noise. Although the system can still use some work, I like how it turned out.</p>
-	</article>
-	<article class="tile is-child pt-1 pb-2 pl-6">
+</article>
+<br>
+<article>
 	<p>Overall creating and releasing the game was a fun experience and my first "completed" game in UE5.</p>
 	</article>
   </div>
@@ -61,25 +37,17 @@
 </div>
 
 <div>
- 
+
 </div>
 
-<div class="box pl-6">
+<div>
   <p><a href="leslieapland.itch.io">Open World Slasher Game on itch.io</a></p>
 </div>
 
-<div class="box pl-6">
+<div>
   <p><a href="https://www.youtube.com/playlist?list=PL0XrWRVx1m2hzRvCocdwxKGx-Fe7E3UcS">Open World Slasher Game devlogs on Youtube</a></p>
 </div>
 
-<div class="box pl-6">
+<div>
   <p><a href="https://github.com/lmapland/Slash">Open World Slasher Game code on Github</a></p>
 </div>
-
-<footer class="footer">
-<div class="content has-text-centered">
-  <p>Copyright Leslie Apland 2023</p>
-</div>
-</footer>
-</body>
-</html>

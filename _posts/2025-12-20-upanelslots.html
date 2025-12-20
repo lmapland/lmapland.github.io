@@ -1,0 +1,78 @@
+---
+layout: post
+author: Leslie Apland
+title: UPanelSlots in UMG
+---
+<article>
+	This article is designed to teach a bit more about how Unreal Engine works under the hood; there's nothing truly actionable here. The goal is to help you use Unreal Engine better by understanding how it really works.
+</article>
+
+<br>
+<h3 class="subtitle is-3">Purpose</h3>
+<article>
+	UPanelSlots are UMG's way of adding children to UPanelWidgets.
+	<br><br>UPanelWidgets include (but are definitely not limited to) Canvases, Overlays, Vertical and HorizontalBoxes, Buttons, WrapBoxes, and Scrollboxes. Anything that can contain at least one child widget uses UPanelSlots to hold the content of those children.
+	<br><br>(Objects that descend directly from UPanelWidget can hold multiple children. UContentWidget descends from UPanelWidget, and objects that descend from UContentWidget can hold one child, like UButton, UBorder, and USizeBox.)
+	<br><br>Note that UPanelWidgets do not hold the child UWidgets directly:
+	<br>
+	<div align="center">
+	    <img src="/assets/images/upanelslot-1.png" width="50%" />
+	</div>
+	They hold a TArray of pointers to UPanelSlots.
+	<br><br>
+	In UPanelWidget::AddChild() a new UPanelSlot is created and the UWidget passed into AddChild() is added to UPanelSlot's Content variable.
+	<br>
+	<div align="center">
+	    <img src="/assets/images/upanelslot-2.png" width="45%" />
+	</div>
+	<br><br>
+	AddChild() is a popular function / node to use when adding new Widgets to Panel Widgets, but it's worth ntoing that UPanelWidget descendants all have their own version of AddChild. UOverlayWidget has AddChildToOverlay().
+	<br>
+	<div align="center">
+	    <img src="/assets/images/upanelslot-3.png" width="30%" />
+	</div>
+	<br>
+	UPanelWidget::AddChild() returns the UPanelSlot* that the passed-in UWidget was added to, but the descendants all have their own version of UPanelSlot, like UOverlaySlot or UVerticalBoxSlot. If you use the AddChild*() function provided by the specific descendant you will receive back a pointer to the specific slot type your UWidget was added to.
+</article>
+
+<br>
+<h3 class="subtitle is-3">Why Slots?</h3>
+<article>
+	So what's the purpose of all this? Why use slots instead of storing Widgets directly? Well, you've certainly seen this in Widget Blueprints before:
+	<br><br>
+	<div align="center">
+	    <img src="/assets/images/upanelslot-4.png" width="30%" valign="top" />
+	    <img src="/assets/images/upanelslot-5.png" width="30%" valign="top" />
+	    <img src="/assets/images/upanelslot-6.png" width="30%" valign="top" />
+	</div>
+	<br>
+	Notice how the Widget in the Canvas Panel has different layout options than the Widgets in the VerticalBox, which is different from the Widgets in the Overlay? This is because the Slots have different layout things that are allowed to be adjusted.
+	<br><br>
+	This details panel is not displaying the UWidget directly, but displaying information about the UPanelSlot, starting with the Slot's layout information, and then displaying the Content assigned to the Slot, aka the UWidget.
+</article>
+
+<br>
+<h3 class="subtitle is-3">What does this mean to you?</h3>
+<article>
+	Why might knowing about how panels store their widgets be useful? Perhaps a bit esoteric, but in the case that you need to move a UWidget from one UPanelWidget to another in c++ at runtime, you will now know why the UWidget loses all layout information, even if you're moving it from and to the same type of UPanelWidget (Overlay -> Overlay, for example). In this case you'll want to get a pointer to the new slot of the specific type you need and reset the layout values that you need. Here's a use case I recently had, using UOverlays.
+	<br><br>
+	In this case I wanted to show the player's stamina bar in the lower center of the screen while the player is on foot. But while the player is riding the horse, I wanted to show the horse's stamina bar:
+	<br>
+	<div align="center">
+	    <img src="/assets/images/upanelslot-7.png" width="30%" />
+	    <img src="/assets/images/upanelslot-8.png" width="30%" />
+	</div>
+	<br>
+	Here's my WBP_StatBars layout:
+	<br>
+	<div align="center">
+	    <img src="/assets/images/upanelslot-9.png" width="20%" />
+	</div>
+	<br>
+	And here's the code I used to swap the bars when the player mounts the horse:
+	<br>
+	<div align="center">
+	    <img src="/assets/images/upanelslot-10.png" width="60%" />
+	</div>
+	<br>
+</article>
