@@ -1,0 +1,50 @@
+---
+layout: post
+author: Leslie Apland
+title: Basic Horse Gaits in Wind's Heartbeat
+---
+<article>
+	In this article I'll go in depth about how the horse gaits in the upcoming game Wind's Heartbeat are designed to mimic real-world horse movement.
+</article>
+
+<br>
+<h3 class="subtitle is-3">Implementing Horse Gaits</h3>
+<article>
+	One of the things my partner and I are attempting with this game is to have realistic horse movement, so I want to share, over the next three posts, three things we're doing with horse gaits and movement which mimic the way a real horse would move.
+In this post I'll talk about the individual gaits.
+	<br><br>
+	For the uninitiated, the average horse has four distinct gaits: Walk, trot, canter, and gallop. Though some breeds have gait variations and other breeds have one additional gait, we're not concerned about those here. These four gaits are distinct from each other and when moving; the horse is either in one of these gaits or not. This is unlike a human whose two-legged gaits of walk and run can be (fairly) seamlessly blended between without issue (frequently using a single blendspace).
+	<br><br>
+	For horses I chose to set up four separate blendspaces and the horse maintains a gait once requested. The player simply requests the horse move up or down a gait. For example, from a halt the player presses "w" and the horse moves into a walk. Then the horse maintains the walking gait with no input from the player until the player presses "w" again to move into the trot, or "s" to move back down to a halt.
+	<br><br>
+	The horse's Anim graph looks like this:
+	<br>
+	<div align="center">
+	    <img src="/assets/images/basichorsegait-1.png" width="60%" />
+	</div>
+	<br>
+	We'll get to the "CanterRight", "CanterLeft" and "FlyingLeadLR" nodes in a future post. For now, each gait has a maximum movement speed that is comparable to a real horse's average speed for the particular gait.
+	<br><br>
+	For the walk I slow down the start of the walk so it looks a little better when moving from halt to walk.
+	<br>
+	<div align="center">
+	    <img src="/assets/images/basichorsegait-2.gif" width="45%" />
+	</div>
+	(Left: not slowed - lots of foot sliding. Right: Walk animation speed matches movement speed - less foot sliding)
+	<br><br>
+	The horse also turns their neck slowly as the player requests the horse turn. As the horse turns their forward movement slows, so they are moving more slowly when they are in a hard turn than they would be moving straight ahead.
+	<br>
+	<div align="center">
+	    <img src="/assets/images/basichorsegait-3.gif" width="30%" />
+	    <br>
+	    <img src="/assets/images/basichorsegait-4.gif" width="30%" />
+	</div>
+	<br>
+	There's also a small buffer window for requesting gaits. In the case that the player wants to speed up to a gallop as quickly as possible they must wait until the horse has fully moved into the current gait before requesting the next one, but there is a small buffer window where their input will be cached and the horse will finish moving into the current gait and then move into the next gait requested.
+	<br><br>
+	Putting it all together we have:
+	<br>
+	<div align="center">
+	    <img src="/assets/images/basichorsegait-5.gif" width="30%" />
+	</div>
+</article>
