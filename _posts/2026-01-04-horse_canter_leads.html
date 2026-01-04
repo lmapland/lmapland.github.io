@@ -1,0 +1,90 @@
+---
+layout: post
+author: Leslie Apland
+title: Picking up the correct canter gait in Wind's Heartbeat
+---
+<article>
+	In this article I'm discussing how Wind picks up the correct canter gait from the trot, depending on the configuration of her feet in the animation.
+</article>
+
+<br>
+<h3 class="subtitle is-4">Implementing Right- and Left-lead canters</h3>
+<article>
+	The canter gait is a two-beat gait involving the front legs being in sync and the hind legs being in sync.
+	<br><br>
+	Left lead canter:
+	<br>
+	<div align="center">
+	    <img src="/assets/images/cantergait-1.gif" width="40%" />
+	    <br>
+	    <img src="/assets/images/cantergait-2.png" width="40%" />
+	</div>
+	<br>
+	The right hoof strikes first and the left hoof follows, resulting in a 1-2 beat.
+</article>
+<br>
+<article>
+	-----
+	<br>
+	<b>Warning: Horse-y technicalities ahead; feel free to skip</b>
+	<br>
+	There is technically some complexity in the gait - when naturally out in the field the horse can pick up a canter gait where the right front leg leads but the left hind leg leads. This is known as a "cross canter" or "crossfiring" and we won't get into it here as it's not something we're implementing in the game.
+	<br>
+	-----
+</article>
+<br>
+
+<article>
+	For our purposes we'll assume that the front and hind legs are always in sync, which leads to two possible gaits: the right-lead canter (right leg leads the front pair, right leg leads the hind pair) and the left-lead canter (left leg leads both pairs).
+	<br><br>
+	The left lead was shown above, and here's the right lead:
+	<br>
+	<div align="center">
+	    <img src="/assets/images/cantergait-3.png" width="40%" />
+	</div>
+	<br>
+	<br>When riding the rider will signal to the horse which lead they want to take up and also bend the horse to make it clear which lead should be used. In general, the right lead canter will feel comfortable when the horse is moving straight or to the right, and the same with the left lead on the left side.
+</article>
+<br>
+
+<article>
+	In Wind's Heartbeat we're not allowing players to choose which gait the horse goes in to. Instead the gait is chosen based on when the player requests the canter. The horse will be trotting at the time, and the position of the horse's legs determines when the horse picks up the canter.
+</article>
+<article>
+	The way this works is that when the player requests a gait change up into canter, that request is logged, but the gait change does not happen right away. Instead, the trot has two anim notifies, each of which call one function and pass in a boolean for whether the horse should pick up the right or left lead.
+	<br><br>
+	The anim notifies that call the function.
+	<div align="center">
+	    <img src="/assets/images/cantergait-4.png" width="40%" />
+	</div>
+	<br>
+	Left: The trot animation in the position that the anim notify "CanCanterLeft" is called.<br>
+	Right: The beginning of the CanterLeft animation.
+	<div align="center">
+	    <img src="/assets/images/cantergait-5.png" width="40%" />
+	</div>
+	<br><br>
+	Left: The trot animation in the position that the anim notify "CanCanterRight" is called.<br>
+	Right: The beginning of the CanterRight animation.
+	<div align="center">
+	    <img src="/assets/images/cantergait-6.png" width="40%" />
+	</div>
+	<br>
+	Note that in each of the animations the legs in the canter animation are a little bit ahead of the legs in the trot animation. This helps the animations transition cleanly.
+	<br><br>In the function, the first question is whether a lead change has been requested. If not, there's nothing to do. If yes, then switch gaits.
+	<br><br>
+	Here is a slowed-down transition from trot to left lead canter.
+	<br>
+	<div align="center">
+	    <img src="/assets/images/cantergait-7.gif" width="40%" />
+	</div>
+	<br><br>
+	Here is a slowed-down transition from trot to right lead canter.
+	<br>
+	<div align="center">
+	    <img src="/assets/images/cantergait-8.gif" width="40%" />
+	</div>
+	<br><br>
+</article>
+<br>
+
