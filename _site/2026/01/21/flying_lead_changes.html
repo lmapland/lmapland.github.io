@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <title>Flying Lead Changes in Wind's Heartbeat</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous">
+	</script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400&display=swap" rel="stylesheet">
+	<style>
+	  body {
+	    font-family: 'Josefin Sans', sans-serif;
+      }
+	</style>
+</head>
+<body>
+<div>
+<section class="hero is-info">
+  <div class="hero-body">
+    <p class="title">Leslie Apland</p>
+  </div>
+</section>
+</div>
+<div align="center">
+	<nav>
+	
+	<a href="/" >
+		Home
+	</a>
+	
+	<a href="/blog.html" >
+		Blog
+	</a>
+	
+</nav>
+
+</div>
+<div>
+    <article class="is-child pt-4 pl-2">
+	<h3 class="subtitle is-3">Flying Lead Changes in Wind's Heartbeat</h3>
+	<p>21 Jan 2026 - Leslie Apland</p>
+<article>
+<br>
+<article article class="tile is-child pt-2 pb-1 pl-6">
+<article>
+	In this article I'll discuss making canter lead changes look good, and why the techniques shown are necessary.
+</article>
+
+<br>
+<h3 class="subtitle is-4">When to Transition Canter Leads</h3>
+<article>
+	As previously discussed, which canter lead the horse picks up depends on where they were in the trot animation cycle. Once the horse is in a particular canter lead, the horse will change leads based on which direction the player turns them. If the horse is doing a left-lead canter and the player turns to the left, the horse will maintain their left-lead canter. But if the player turns to the right, shortly after the start of the turn the horse will execute a flying lead change, switching to the right-lead canter.
+	<br><br>
+	Here's our Animation Blueprint State Machine at this time:
+	<br>
+	<div align="center">
+	    <img src="/assets/images/flying-1.png" width="40%" />
+	</div>
+	<br><br>
+	As with moving from the trot to the canter, there is a specific place in the canter animation where the flying lead animation should be played. So the code sets a boolean that the flying lead should happen, and then waits for the animation notify to trigger. The function behind the notify checks the boolean and broadcasts that the transition should happen. The ABP has bound to the delegate, and this broadcast causes a boolean in the ABP to be set. This boolean causes a state machine transition, and the flying lead animation is played.
+	<br><br>
+	Setting the boolean, then waiting for the anim notify to trigger.
+	<div align="center">
+	    <img src="/assets/images/flying-2.png" width="40%" />
+	    <br>
+	    <img src="/assets/images/flying-3.png" width="40%" />
+	    <br>
+	</div>
+	Broadcast that sets the lead change in motion.
+	<div align="center">
+	    <img src="/assets/images/flying-4.png" width="40%" />
+	    <br>
+	</div>
+	Where the AnimBP binds to the delegate and sets the variable.
+	<div align="center">
+	    <img src="/assets/images/flying-5.png" width="40%" />
+	    <br>
+	</div>
+	The AnimBP responding to the variable.
+	<div align="center">
+	    <img src="/assets/images/flying-6.png" height="40%" />
+	    <br>
+	    <img src="/assets/images/flying-7.png" width="40%" />
+	    <br>
+	</div>
+	Putting it all together we have:
+	<div align="center">
+	    <img src="/assets/images/flying-8.gif" width="40%" />
+	</div>
+	<br>
+</article>
+
+<br>
+<h3 class="subtitle is-4">Does it Matter When the Flying Lead Change Animation is Played?</h3>
+<article>
+	So I've showed things looking good and the animations blending well. I want to show some negative cases, where things don't look so good.
+You may be thinking,
+	<br><br>
+	"It seems like a lot of work to set up when the animations should transition. Does it really look so bad if we execute the transition immediately when the player requests the new gait?"
+	<br><br>
+	So let's switch this around. Instead of saving the gait request, let's broadcast it immediately when the player starts turning the horse, and let's remove the anim notifies from the Left Lead Canter animation.
+	<div align="center">
+	    <img src="/assets/images/flying-9.png" width="40%" />
+	</div>
+	<br><br>
+	And this is the result:
+	<div align="center">
+	    <img src="/assets/images/flying-10.gif" width="40%" />
+	</div>
+	<br>
+	See the hitch in the legs as the animations blend, but slightly out of sync? If we want our lead changes to look good, making sure the animations blend at the correct times is important!
+	<br><br>
+</article>
+
+<br>
+<h3 class="subtitle is-4">Are Flying Lead Change Animations Really Necessary?</h3>
+<article>
+	You might wonder,
+	<br><br>
+ "Do we really need a flying lead change animation? Does it look that bad if we just switch from the Left Lead Canter animation to the Right Lead Canter animation?"
+	 <br><br>
+Let's do our best to make the animation switch look as seamless as possible. We'll remove the Flying Lead animation and have the Left Lead Canter state go directly into the Right Lead Canter state.
+	<div align="center">
+	    <img src="/assets/images/flying-11.png" height="40%" />
+	</div>
+	It would be best to line up the two canter lead animations and trigger the switch to the right lead when the left lead animation is closest, but because the leads are mirrored the two animations do not sync well at all. There's no "best place" as the animations are opposites of each other. No matter where the anim notify is placed, the leads will not sync up well.
+	<br>
+	Here's the result:
+	<div align="center">
+	    <img src="/assets/images/flying-12.gif" width="40%" />
+	</div>
+	<br>
+	See the slide in the middle of the animation? All four legs blend in a strange sliding motion to where they are in the second animation.
+</article>
+
+<br>
+<h3 class="subtitle is-4">Results</h3>
+<article>
+	As you can see, some of the animation transitions may be passable without an intermediate animation, but the intermediate animation makes the animation switch look a whole lot better. And making sure the animations are timed correctly makes them look smooth and avoids animation "hitches". In this case, it's very important for us to have animations transitions that look as natural as possible because the market we're catering to - horse girls - will notice any problems straight away.
+</article>
+<br>
+
+</article>
+<article align="center" class="has-background-white-ter">
+	<br>
+	<p>Check out my latest game: <a href="https://horsegirlgamesllc.com">Wind's Heartbeat</a></p>
+	<p>And join the mailing list to stay updated! <a href="https://windsheartbeat.eo.page/wqn9f">Wind's Heartbeat mailing list</a></p>
+	<br>
+	<div align="center">
+	    <img src="/assets/images/index-1.png" width="40%" />
+	</div>
+	<br>
+</article>
+
+</div>
+
+<footer class="footer">
+<div class="content has-text-centered">
+  <p>Copyright Leslie Apland 2025</p>
+</div>
+</footer>
+
+</body>
+</html>
